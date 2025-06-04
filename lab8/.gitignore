@@ -2,3 +2,4 @@ water_potability.csv
 mlruns
 models
 plots
+__pycache__
