@@ -7,7 +7,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, f1_score, classification_report
+from sklearn.metrics import accuracy_score, f1_score
 import gradio as gr
 
 def create_folders(**kwargs):
@@ -88,7 +88,6 @@ def preprocess_and_train(**kwargs):
 
     print(f"Accuracy en test: {acc:.4f}")
     print(f"F1-score clase positiva (contratado): {f1:.4f}")
-    print(classification_report(y_test, y_pred))
 
     # Guardar modelo
     model_path = os.path.join(base_path, 'models', 'rf_pipeline.joblib')
@@ -118,13 +117,5 @@ def gradio_interface(**kwargs):
         description="Sube un archivo JSON con las características de entrada para predecir si Vale será contratada o no."
     )
     interface.launch(share=True)
-
-if __name__ == "__main__":
-    # Simular el contexto de ejecución para pruebas
-    ds = datetime.now().strftime('%Y-%m-%d')
-    #create_folders(ds=ds)
-    #split_data(ds=ds)
-    #preprocess_and_train(ds=ds)
-    gradio_interface(ds=ds)
     
 
