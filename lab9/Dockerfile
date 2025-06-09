@@ -1,28 +1,36 @@
-# Imagen base recomendada
+# lab9/Dockerfile
+
 FROM python:3.10-slim
 
-# Establece el directorio de trabajo dentro del contenedor
-WORKDIR /app
+# 1. Variables de entorno de Airflow
+ENV AIRFLOW_HOME=/app/airflow
+ENV AIRFLOW__CORE__LOAD_EXAMPLES=False
+ENV AIRFLOW__CORE__EXECUTOR=SequentialExecutor
 
-# Instala dependencias del sistema necesarias
+WORKDIR ${AIRFLOW_HOME}
+
+# 2. Dependencias del SO
 RUN apt-get update && \
-    apt-get install -y curl gcc g++ build-essential libffi-dev libpq-dev git && \
-    apt-get clean
+    apt-get install -y curl gcc g++ build-essential && \
+    rm -rf /var/lib/apt/lists/*
 
-# Configura pip para evitar errores SSL intermitentes
-RUN pip config set global.index-url https://pypi.org/simple
-
-# Copia el archivo de dependencias primero para aprovechar el cache
+# 3. Copiar e instalar Python requirements (incluye apache-airflow)
 COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Instala las dependencias de Python
-RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt
+# 4. Inicializar Airflow
+#    Crea el directorio AIRFLOW_HOME y la base de datos SQLite
+RUN mkdir -p "${AIRFLOW_HOME}/dags" \
+    && airflow db migrate
 
-# Copia el resto de la app (incluye dags/, hiring_functions.py, etc.)
-COPY . .
+# 5. Copiar tu código
+COPY dags/ "${AIRFLOW_HOME}/dags/"
+COPY plugins/ "${AIRFLOW_HOME}/plugins/"
+COPY dags/hiring_functions.py ${AIRFLOW_HOME}/hiring_functions.py
 
-# Exponer el puerto de Airflow webserver
+# 6. Exponer puerto de la UI
 EXPOSE 8080
 
-# Comando por defecto al iniciar el contenedor
+# 7. Comando por defecto
+#    'airflow standalone' arranca webserver + scheduler en SQLite
 CMD ["airflow", "standalone"]

@@ -1,5 +1,7 @@
+#lab9/dags/dag_lineal.py
+
 from airflow import DAG
-from airflow.operators.dummy import DummyOperator
+from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 from datetime import datetime
 import os
@@ -25,37 +27,37 @@ default_args = {
 with DAG(
     dag_id='hiring_lineal',
     default_args=default_args,
-    schedule_interval=None,
+    schedule=None,
     catchup=False
 ) as dag:
 
-    start = DummyOperator(
+    start = EmptyOperator(
         task_id='start'
     )
 
     create_dirs = PythonOperator(
         task_id='create_folders',
-        python_callable=wrap_function(create_folders)
+        python_callable=create_folders
     )
 
     download = PythonOperator(
         task_id='download_data',
-        python_callable=wrap_function()
+        python_callable=download_data
     )
 
     split = PythonOperator(
         task_id='split_data',
-        python_callable=wrap_function(split_data)
+        python_callable=split_data
     )
 
     train = PythonOperator(
         task_id='train_model',
-        python_callable=wrap_function(preprocess_and_train)
+        python_callable=preprocess_and_train
     )
 
     deploy = PythonOperator(
         task_id='gradio_ui',
-        python_callable=wrap_function(gradio_interface)
+        python_callable=gradio_interface
     )
 
     # flujo de tareas
