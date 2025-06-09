@@ -9,7 +9,7 @@ from airflow.operators.python import PythonOperator, BranchPythonOperator
 from airflow.operators.bash import BashOperator
 from airflow.utils.trigger_rule import TriggerRule
 
-# Importamos tus funciones
+
 from hiring_dynamic_functions import (
     create_folders,
     load_ands_merge,
@@ -17,7 +17,7 @@ from hiring_dynamic_functions import (
     train_model,
     evaluate_models
 )
-# Importamos los modelos que queremos entrenar
+
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier

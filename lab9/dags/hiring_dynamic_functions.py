@@ -144,7 +144,7 @@ def train_model(model, model_name, **kwargs):
     X_train = df.drop(columns=['HiringDecision'])
     y_train = df['HiringDecision']
     
-    # 2) Definir las columnas (igual que en la versión estática)
+    # 2) Definir las columnas
     numeric_features     = ['Age', 'ExperienceYears', 'DistanceFromCompany',
                             'InterviewScore', 'SkillScore', 'PersonalityScore']
     categorical_features = ['Gender', 'EducationLevel', 'PreviousCompanies',

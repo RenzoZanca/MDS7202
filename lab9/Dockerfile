@@ -23,7 +23,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p "${AIRFLOW_HOME}/dags" \
     && airflow db migrate
 
-# 5. Copiar tu código
+
 COPY dags/ "${AIRFLOW_HOME}/dags/"
 COPY plugins/ "${AIRFLOW_HOME}/plugins/"
 COPY dags/hiring_functions.py ${AIRFLOW_HOME}/hiring_functions.py
@@ -31,6 +31,5 @@ COPY dags/hiring_functions.py ${AIRFLOW_HOME}/hiring_functions.py
 # 6. Exponer puerto de la UI
 EXPOSE 8080
 
-# 7. Comando por defecto
-#    'airflow standalone' arranca webserver + scheduler en SQLite
+
 CMD ["airflow", "standalone"]
